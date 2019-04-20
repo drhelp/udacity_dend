@@ -105,6 +105,64 @@ Instruction to execute ETL process:
     - Open **test.ipynb** in Jupyter Notebook
     - Run cells one-by-one to view first few rows of each table
 
+## Example of analytical queries 
+Here are examples of few questions that can be ansered by Sparkify analytics team using the newly created database
+
+#### Which songs are played the most?
+```sql
+-- Select top 10 songs played ever
+select 
+    a."name" as artsist_name,
+    s.title as song_title,
+    count(*) as plays_qty
+from songplays p
+join artists a on (p.artist_id = a.artist_id)
+join songs s on (p.song_id = s.song_id)
+group by 1,2
+order by 3 desc
+limit 10;
+```
+
+#### What are the most popular artists?
+```sql
+select 
+	a."name" as artsist_name,
+	count(*) as plays_qty
+from songplays p
+join artists a on (p.artist_id = a.artist_id)
+group by 1
+order by 2 desc
+limit 10;
+```
+#### Which users are the mpost active in app?
+```sql
+-- Select top 10 active users
+select 
+	u.first_name,
+	u.last_name,
+	u."level",
+	count(*) as plays_qty
+from songplays p
+join users u on (p.user_id = u.user_id)
+group by 1,2,3
+order by 4 desc
+limit 10;
+```
+|first_name|last_name|level|plays_qty|
+|----------|---------|-----|---------|
+|Cuevas|Chloe|free|689|
+|Levine|Tegan|paid|665|
+|Harrell|Kate|paid|557|
+|Koch|Lily|paid|463|
+|Kirby|Aleena|paid|397|
+|Lynch|Jacqueline|paid|346|
+|Griffin|Layla|paid|321|
+|Klein|Jacob|paid|289|
+|Rodriguez|Mohammad|free|270|
+|Jones|Matthew|free|248|
+
+
+
 ## To-Do
 - Implement exception handling and print user-friendly messages
 - Move configurable options (e.g. paths, connection string, etc.) to config files.
