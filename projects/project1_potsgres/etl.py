@@ -13,6 +13,9 @@ def process_song_file(cur, filepath):
     Args:
         cur: active PostgreSQL database cursor
         filepath: full path to song file
+    
+    Return:
+        None
     '''
     # open song file
     df = pd.read_json(filepath, lines=True)
@@ -36,6 +39,9 @@ def process_log_file(cur, filepath):
     Args:
         cur: active PostgreSQL database cursor
         filepath: full path to song file
+
+    Return:
+        None
     '''
     # open log file
     df = pd.read_json(filepath, lines=True)
@@ -58,7 +64,7 @@ def process_log_file(cur, filepath):
 
     # load user table
     user_df = df[["userId", "lastName", "firstName", "gender", "level"]]
-    user_df = user_df[user_df["userId"] != ""]
+    user_df = user_df[user_df["userId"].notnull()]
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -90,6 +96,9 @@ def process_data(cur, conn, filepath, func):
         filepath: full path to directory containg source *.json files
         func: "processing" function to be called for each file. Should be in
         form some_func(cur, filepath)
+    
+    Return:
+        None
     '''
     # get all files matching extension from directory
     all_files = []
@@ -113,6 +122,12 @@ def main():
     '''
     Staring point for ETL pipeline execution. Establishes DB connection and
     runs file processing
+
+    Agrs:
+        None
+    
+    Return:
+        None
     '''
     conn = psycopg2.connect(
         "host=127.0.0.1 dbname=sparkifydb user=student password=student")
@@ -122,6 +137,7 @@ def main():
     process_data(cur, conn, filepath='data/log_data', func=process_log_file)
 
     conn.close()
+    print ("Tables loaded successfully!")
 
 if __name__ == "__main__":
     main()
