@@ -167,3 +167,4 @@ limit 10;
 - Implement exception handling and print user-friendly messages
 - Move configurable options (e.g. paths, connection string, etc.) to config files.
 - Store database credentials in a secure manner, get rid of hard-coding l/p
+- Implement bulk load data using COPY FROM command (+staging tables)
